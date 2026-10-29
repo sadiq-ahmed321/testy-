@@ -278,13 +278,13 @@ footer { margin-top: auto; text-align: center; padding: 25px; border-top: 1px so
         <div id="fullFormView">
             <button class="back-btn" onclick="goHome()"><i class="fa-solid fa-arrow-left"></i> <span id="txt-form-back">Back to Home</span></button>
             <div class="full-form-card">
-                <h2 id="formHeaderTitle"><i class="fa-solid fa-file-pen" style="color:var(--accent-red)"></i> Support Ticket Form</h2>
-                <p class="form-subtext">Please fill in your details and verify your email via Google login.</p>
+                <h2 id="formHeaderTitle"><i class="fa-solid fa-file-pen" style="color:var(--accent-red)"></i> Submit Technical Issue Form</h2>
+                <p class="form-subtext" id="formSubtext">Please fill your tech issue</p>
 
                 <form onsubmit="handleFullFormSubmit(event)">
 
                     <div class="form-group">
-                        <label>Your Name / Game Nickname</label>
+                        <label id="lblYourName">Your Name</label>
                         <input type="text" id="inputNickname" placeholder="e.g. Sadiq_Ahmed" required>
                     </div>
 
@@ -309,17 +309,18 @@ footer { margin-top: auto; text-align: center; padding: 25px; border-top: 1px so
                     </div>
 
                     <div class="form-group">
-                        <label>Platform / System</label>
-                        <select required>
-                            <option>Android / Mobile App</option>
-                            <option>Tablet / iPad</option>
-                            <option>Discord Bot / Community</option>
-                            <option>Web Services / Subdomain</option>
+                        <label id="lblIssueType">Which kinda Issue?</label>
+                        <select id="selectIssueType" required>
+                            <option value="BUG">BUG</option>
+                            <option value="WEBSITE ISSUE">WEBSITE ISSUE</option>
+                            <option value="IN-GAME ISSUE">IN-GAME ISSUE</option>
+                            <option value="DISCORD COMMUNITY">DISCORD COMMUNITY</option>
+                            <option value="OTHER">OTHER</option>
                         </select>
                     </div>
 
                     <div class="form-group">
-                        <label>Detailed Description & Evidence Link</label>
+                        <label id="lblDescription">Detailed Description & Evidence Link</label>
                         <textarea rows="6" placeholder="Provide full details, video/screenshot links, or exact error logs..." required></textarea>
                     </div>
 
@@ -380,7 +381,6 @@ function triggerRealGoogleAuth() {
         // Prompt Official Google Real Account Selection Popup
         google.accounts.id.prompt((notification) => {
             if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
-                // Fallback Token Client Popup if One-Tap is restricted
                 useOAuthFallback();
             }
         });
@@ -411,7 +411,6 @@ function useOAuthFallback() {
 }
 
 function handleCredentialResponse(response) {
-    // Parse JWT token from Google
     const payload = parseJwt(response.credential);
     if (payload && payload.email) {
         onGoogleLoginSuccess(payload.email, payload.name);
@@ -470,10 +469,31 @@ function openFullForm(type) {
     document.getElementById('fullFormView').style.display = 'block';
 
     const titleElem = document.getElementById('formHeaderTitle');
+    const subtextElem = document.getElementById('formSubtext');
+    const labelIssueType = document.getElementById('lblIssueType');
+    const selectIssueType = document.getElementById('selectIssueType');
+
     if (type === 'report') {
         titleElem.innerHTML = `<i class="fa-solid fa-flag" style="color:var(--accent-red)"></i> Report Player Form`;
+        subtextElem.textContent = "Please fill player details to report";
+        labelIssueType.textContent = "Reason for Report?";
+        selectIssueType.innerHTML = `
+            <option value="HACKING / CHEATING">HACKING / CHEATING</option>
+            <option value="ABUSIVE BEHAVIOR">ABUSIVE BEHAVIOR</option>
+            <option value="IN-GAME SCAM">IN-GAME SCAM</option>
+            <option value="OTHER">OTHER</option>
+        `;
     } else {
         titleElem.innerHTML = `<i class="fa-solid fa-bug" style="color:var(--accent-red)"></i> Submit Technical Issue Form`;
+        subtextElem.textContent = "Please fill your tech issue";
+        labelIssueType.textContent = "Which kinda Issue?";
+        selectIssueType.innerHTML = `
+            <option value="BUG">BUG</option>
+            <option value="WEBSITE ISSUE">WEBSITE ISSUE</option>
+            <option value="IN-GAME ISSUE">IN-GAME ISSUE</option>
+            <option value="DISCORD COMMUNITY">DISCORD COMMUNITY</option>
+            <option value="OTHER">OTHER</option>
+        `;
     }
     scrollToTop();
 }
