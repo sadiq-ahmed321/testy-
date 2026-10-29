@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>WINDS - Knowledge Base & Articles</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<!-- Official Google Identity Services Script -->
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+
+:root {
+    --bg-cream: #f6f3eb;
+    --card-bg: #eae4d7;
+    --card-border: #dcd3c1;
+    --text-dark: #222222;
+    --text-muted: #666055;
+    --accent-red: #e63946;
+    --accent-red-hover: #d62828;
+    --accent-yellow: #ffb703;
+    --accent-yellow-hover: #fb8500;
+    --article-card-bg: #1e2235;
+    --article-card-border: rgba(255, 255, 255, 0.08);
+    --grnd-box-bg: #1d2130;
+}
+
+html, body {
+    height: 100%;
+    width: 100%;
+    overflow: hidden !important;
+    background-color: var(--bg-cream);
+}
+
+.top-navbar {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    height: 60px !important;
+    background: #1e2235 !important;
+    padding: 0 5%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--article-card-border);
+    z-index: 9999999 !important;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+}
+
+.nav-logo { color: #ffffff; font-size: 1.5rem; font-weight: 900; letter-spacing: 1.2px; text-transform: uppercase; text-decoration: none; }
+.nav-logo span.red-i { color: var(--accent-red); }
+
+.lang-selector-wrap { position: relative; display: flex; align-items: center; gap: 8px; color: #ffffff; background: rgba(255,255,255,0.1); padding: 6px 14px; border-radius: 20px; border: 1px solid rgba(255,255,255,0.15); transition: 0.3s; }
+.lang-selector-wrap:hover { background: rgba(255,255,255,0.2); }
+.lang-selector-wrap i { font-size: 1rem; color: #ffffff; }
+.lang-select { background: transparent; border: none; color: #ffffff; font-size: 0.9rem; font-weight: 700; outline: none; cursor: pointer; padding-right: 5px; text-transform: uppercase; }
+.lang-select option { background: #1e2235; color: #ffffff; font-weight: 600; padding: 10px; }
+
+.page-content-wrapper {
+    position: absolute;
+    top: 60px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: none;
+    scroll-behavior: smooth;
+    display: flex;
+    flex-direction: column;
+}
+.page-content-wrapper > * { flex-shrink: 0; }
+
+.hero-section { padding: 40px 20px 25px 20px; text-align: center; }
+.main-title { font-size: 2.5rem; font-weight: 900; letter-spacing: 0.5px; color: var(--text-dark); margin-bottom: 12px; text-transform: uppercase; }
+.main-title span.red-i { color: var(--accent-red); }
+.sub-help-title { color: #1a1a1a; font-size: 1.6rem; font-weight: 800; margin-bottom: 25px; letter-spacing: 0.5px; }
+
+.search-box { position: relative; max-width: 600px; margin: 0 auto 10px auto; }
+.search-box input { width: 100%; padding: 16px 20px 16px 50px; background: #ffffff; border: 1px solid var(--card-border); border-radius: 12px; color: var(--text-dark); font-size: 1rem; outline: none; box-shadow: 0 4px 15px rgba(0,0,0,0.03); transition: 0.3s; }
+.search-box input:focus { border-color: var(--accent-red); box-shadow: 0 0 10px rgba(230,57,70,0.2); }
+.search-box i { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 1.1rem; }
+
+.main-container { max-width: 1100px; margin: 0 auto 50px auto; padding: 0 20px; width: 100%; }
+
+.grnd-support-box { background: var(--grnd-box-bg); border-radius: 20px; padding: 35px 30px; text-align: center; color: #ffffff; margin-bottom: 45px; box-shadow: 0 10px 30px rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05); }
+.grnd-support-box h3 { font-size: 1.8rem; font-weight: 800; margin-bottom: 12px; letter-spacing: 0.5px; }
+.grnd-support-box p { color: #a0aec0; font-size: 0.95rem; max-width: 650px; margin: 0 auto 25px auto; line-height: 1.6; }
+
+.btn-get-help { background: var(--accent-yellow); color: #121212; border: none; padding: 14px 38px; font-size: 1.05rem; font-weight: 800; border-radius: 10px; cursor: pointer; transition: background 0.3s, transform 0.2s, box-shadow 0.3s; box-shadow: 0 6px 18px rgba(255,183,3,0.35); }
+.btn-get-help:hover { background: var(--accent-yellow-hover); color: #ffffff; transform: translateY(-2px); }
+
+.help-options-container { display: none; margin-top: 30px; padding-top: 25px; border-top: 1px solid rgba(255,255,255,0.1); text-align: center; }
+.help-options-container.active { display: block; animation: fadeIn 0.4s ease-in-out; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+.category-select-wrapper { max-width: 480px; margin: 0 auto; text-align: left; }
+.category-select-wrapper label { display: block; font-size: 0.9rem; font-weight: 700; color: #a0aec0; margin-bottom: 8px; }
+.category-dropdown { width: 100%; padding: 14px 18px; background: #282c3f; border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; color: #ffffff; font-size: 0.98rem; font-weight: 600; outline: none; cursor: pointer; transition: border-color 0.3s; }
+.category-dropdown:focus { border-color: var(--accent-yellow); }
+
+.section-header { margin-bottom: 25px; }
+.section-header h2 { font-size: 1.6rem; font-weight: 900; color: #1a1a1a; border-left: 5px solid var(--accent-red); padding-left: 14px; }
+
+.articles-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; }
+
+.category-card { background: var(--article-card-bg); border-radius: 16px; overflow: hidden; border: 1px solid var(--article-card-border); transition: transform 0.3s ease, box-shadow 0.3s ease; cursor: pointer; display: flex; flex-direction: column; color: #ffffff; box-shadow: 0 8px 25px rgba(0,0,0,0.15); }
+.category-card:hover { transform: translateY(-6px); box-shadow: 0 12px 30px rgba(0,0,0,0.25); }
+
+.category-banner { width: 100%; height: 190px; overflow: hidden; position: relative; background-color: #0b0d17; }
+.category-banner img { width: 100%; height: 100%; object-fit: cover; object-position: center; image-rendering: -webkit-optimize-contrast; transition: transform 0.4s ease; }
+.category-card:hover .category-banner img { transform: scale(1.05); }
+
+.category-body { padding: 22px 20px; text-align: center; flex-grow: 1; display: flex; flex-direction: column; justify-content: space-between; }
+.category-body h3 { font-size: 1.25rem; font-weight: 800; margin-bottom: 10px; color: #ffffff; }
+.category-body p { font-size: 0.9rem; color: #a0aec0; line-height: 1.5; margin-bottom: 20px; }
+.article-count { font-size: 0.85rem; font-weight: 700; color: #718096; text-transform: lowercase; border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 12px; }
+
+#detailView, #fullFormView { display: none; }
+
+.back-btn { display: inline-flex; align-items: center; gap: 8px; background: var(--card-bg); border: 1px solid var(--card-border); color: var(--text-dark); padding: 10px 20px; border-radius: 8px; font-weight: 700; cursor: pointer; margin-bottom: 25px; transition: 0.2s; }
+.back-btn:hover { background: #dcd3c1; }
+
+.article-content-box, .full-form-card { background: #ffffff; border: 1px solid var(--card-border); border-radius: 16px; padding: 35px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); color: var(--text-dark); }
+.full-form-card h2 { font-size: 1.6rem; font-weight: 800; margin-bottom: 8px; color: #1a1a1a; }
+.full-form-card p.form-subtext { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 25px; border-bottom: 1px solid var(--card-border); padding-bottom: 15px; }
+
+.btn-google-login { display: inline-flex; align-items: center; justify-content: center; gap: 12px; background: #ffffff; color: #374151; border: 1px solid #cbd5e1; padding: 12px 18px; border-radius: 8px; font-size: 0.95rem; font-weight: 700; cursor: pointer; width: 100%; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: 0.2s; }
+.btn-google-login:hover { background: #f1f5f9; border-color: #94a3b8; }
+.google-icon { width: 18px; height: 18px; }
+
+.user-logged-box { display: none; align-items: center; justify-content: space-between; background: #e0f2fe; border: 1px solid #bae6fd; padding: 12px 16px; border-radius: 8px; color: #0369a1; font-weight: 700; font-size: 0.9rem; width: 100%; }
+.user-logged-box span { display: flex; align-items: center; gap: 8px; }
+.btn-logout-small { background: transparent; border: none; color: #0284c7; font-size: 0.8rem; cursor: pointer; text-decoration: underline; }
+
+.form-group { margin-bottom: 20px; }
+.form-group label { display: block; margin-bottom: 8px; font-size: 0.9rem; font-weight: 700; color: var(--text-dark); }
+.form-group input, .form-group textarea, .form-group select { width: 100%; padding: 14px 16px; background: #ffffff; border: 1px solid var(--card-border); border-radius: 8px; color: var(--text-dark); outline: none; font-size: 0.95rem; }
+.form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: var(--accent-red); }
+
+.btn-red { width: 100%; padding: 14px; border-radius: 8px; border: none; background: var(--accent-red); color: #ffffff; font-weight: 700; font-size: 1.05rem; cursor: pointer; transition: background 0.3s; box-shadow: 0 4px 10px rgba(230,57,70,0.25); display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
+.btn-red:hover { background: var(--accent-red-hover); }
+
+.article-meta { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid var(--card-border); }
+.article-body-text { font-size: 0.98rem; line-height: 1.7; color: #333333; }
+.article-body-text p { margin-bottom: 16px; }
+.article-body-text h4 { font-size: 1.1rem; font-weight: 800; margin: 20px 0 10px 0; color: #1a1a1a; }
+.article-body-text ul { margin-left: 20px; margin-bottom: 16px; }
+.article-body-text li { margin-bottom: 8px; }
+
+.discord-box { background: #f0f2f8; border-left: 4px solid #5865F2; padding: 18px 20px; border-radius: 8px; margin: 20px 0; color: #222222; }
+.discord-box a { color: #5865F2; font-weight: 800; text-decoration: none; }
+.discord-box a:hover { text-decoration: underline; }
+
+.chat-widget-btn { position: fixed; bottom: 25px; right: 25px; width: 60px; height: 60px; background: var(--accent-red); color: #ffffff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; cursor: pointer; box-shadow: 0 6px 20px rgba(230,57,70,0.4); z-index: 99; transition: transform 0.2s; }
+.chat-widget-btn:hover { transform: scale(1.05); }
+
+footer { margin-top: auto; text-align: center; padding: 25px; border-top: 1px solid var(--card-border); color: var(--text-muted); font-size: 0.85rem; font-weight: 600; }
+</style>
+</head>
+<body>
+
+<!-- TOP FIXED NAVBAR -->
+<header class="top-navbar">
+    <a href="#" class="nav-logo" onclick="goHome(); return false;">W<span class="red-i">I</span>NDS</a>
+    <div class="lang-selector-wrap">
+        <i class="fa-solid fa-globe"></i>
+        <select class="lang-select" id="languageSelector" onchange="changeLanguage(this.value)">
+            <option value="en">ENGLISH</option>
+            <option value="hi">HINDI</option>
+            <option value="hinglish">HINGLISH</option>
+            <option value="ru">RUSSIAN</option>
+            <option value="es">SPANISH</option>
+        </select>
+    </div>
+</header>
+
+<div class="page-content-wrapper" id="scrollArea">
+
+    <div class="hero-section" id="heroSection">
+        <h1 class="main-title">W<span class="red-i">I</span>ND'S DEVELOPMENT (2015)</h1>
+        <h2 class="sub-help-title" id="txt-sub-help">How Can We Help You?</h2>
+        <div class="search-box" id="searchBoxContainer">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="searchInput" placeholder="Search support articles, reports, or guides...">
+        </div>
+    </div>
+
+    <div class="main-container">
+
+        <!-- HOME VIEW -->
+        <div id="homeView">
+
+            <div class="grnd-support-box">
+                <h3 id="txt-box-title">How to contact support?</h3>
+                <p id="txt-box-desc">If you have any questions, you can submit a ticket or contact us via our official developer support network — we're here for you.</p>
+                <button class="btn-get-help" id="btn-get-help-text" onclick="toggleSupportOptions()">Get Your Help!</button>
+
+                <div class="help-options-container" id="helpOptionsBox">
+                    <div class="category-select-wrapper">
+                        <label id="lbl-select-cat"><i class="fa-solid fa-layer-group"></i> SELECT CATEGORY</label>
+                        <select class="category-dropdown" id="supportCategorySelect" onchange="handleCategorySelection(this.value)">
+                            <option value="">SELECT CATEGORY</option>
+                            <option value="report">1. REPORT PLAYER</option>
+                            <option value="issue">2. SUBMIT TECHNICAL ISSUE</option>
+                            <option value="live">3. LIVE SUPPORT</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-header">
+                <h2 id="txt-kb-title">Knowledge Base Categories</h2>
+            </div>
+
+            <div class="articles-grid" id="categoriesGrid">
+
+                <div class="category-card" onclick="openCategory('news')">
+                    <div class="category-banner"><img src="https://i.postimg.cc/pT8MyBwn/file-000000002820820bb95c508e1d9444f5.png" alt="News" loading="lazy"></div>
+                    <div class="category-body">
+                        <h3 id="cat-news-title">News</h3>
+                        <p id="cat-news-desc">Up-to-date information about project news, patches, and dev logs.</p>
+                        <div class="article-count">1 article</div>
+                    </div>
+                </div>
+
+                <div class="category-card" onclick="openCategory('guide')">
+                    <div class="category-banner"><img src="https://i.postimg.cc/D06f5T23/file-000000001d2c81f5949e46428a83d0f3.png" alt="Beginners Guide" loading="lazy"></div>
+                    <div class="category-body">
+                        <h3 id="cat-guide-title">Beginner's Guide</h3>
+                        <p id="cat-guide-desc">A comprehensive guide to help you get started with our platforms and apps.</p>
+                        <div class="article-count">1 article</div>
+                    </div>
+                </div>
+
+                <div class="category-card" onclick="openCategory('account')">
+                    <div class="category-banner"><img src="https://i.postimg.cc/52hJB0wn/file-000000008fd481f88892a58cce6afb70.png" alt="Account Issues" loading="lazy"></div>
+                    <div class="category-body">
+                        <h3 id="cat-account-title">Account Issues</h3>
+                        <p id="cat-account-desc">Recommendations for users on protecting and recovering their accounts.</p>
+                        <div class="article-count">1 article</div>
+                    </div>
+                </div>
+
+                <div class="category-card" onclick="openCategory('payments')">
+                    <div class="category-banner"><img src="https://i.postimg.cc/4NXmc8JC/file-00000000c40c820ba36e53c5b7f8f2c8.png" alt="Payments and Purchases" loading="lazy"></div>
+                    <div class="category-body">
+                        <h3 id="cat-payments-title">Payments and Purchases</h3>
+                        <p id="cat-payments-desc">Answers to questions related to store payments, subscriptions, and billing.</p>
+                        <div class="article-count">1 article</div>
+                    </div>
+                </div>
+
+                <div class="category-card" onclick="openCategory('violations')">
+                    <div class="category-banner"><img src="https://i.postimg.cc/5NXqzkPT/file-00000000afc482309783972be8303091.png" alt="Violations and Sanctions" loading="lazy"></div>
+                    <div class="category-body">
+                        <h3 id="cat-violations-title">Violations and Sanctions</h3>
+                        <p id="cat-violations-desc">Community rules, ban appeals, and enforcement policies details.</p>
+                        <div class="article-count">1 article</div>
+                    </div>
+                </div>
+
+                <div class="category-card" onclick="openCategory('faq')">
+                    <div class="category-banner"><img src="https://i.postimg.cc/wvd6pvM7/file-00000000fbc8820babc630c3bb9a138a.png" alt="FAQ" loading="lazy"></div>
+                    <div class="category-body">
+                        <h3 id="cat-faq-title">FAQ</h3>
+                        <p id="cat-faq-desc">Frequently Asked Questions regarding host servers, bot commands, and dev tools.</p>
+                        <div class="article-count">1 article</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- FULL PAGE FORM VIEW -->
+        <div id="fullFormView">
+            <button class="back-btn" onclick="goHome()"><i class="fa-solid fa-arrow-left"></i> <span id="txt-form-back">Back to Home</span></button>
+            <div class="full-form-card">
+                <h2 id="formHeaderTitle"><i class="fa-solid fa-file-pen" style="color:var(--accent-red)"></i> Support Ticket Form</h2>
+                <p class="form-subtext">Please fill in your details and verify your email via Google login.</p>
+
+                <form onsubmit="handleFullFormSubmit(event)">
+
+                    <div class="form-group">
+                        <label>Your Name / Game Nickname</label>
+                        <input type="text" id="inputNickname" placeholder="e.g. Sadiq_Ahmed" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Your Mail (Google Account)</label>
+                        
+                        <!-- REAL GOOGLE BUTTON CONTAINER -->
+                        <button type="button" class="btn-google-login" id="btnGoogleAuth" onclick="triggerRealGoogleAuth()">
+                            <svg class="google-icon" viewBox="0 0 24 24">
+                                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                            </svg>
+                            Sign in with Google
+                        </button>
+
+                        <div class="user-logged-box" id="userGoogleStatus">
+                            <span><i class="fa-solid fa-circle-check" style="color:#0284c7"></i> <strong id="loggedEmailText">user@gmail.com</strong></span>
+                            <button type="button" class="btn-logout-small" onclick="triggerRealGoogleAuth()">Change Account</button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Platform / System</label>
+                        <select required>
+                            <option>Android / Mobile App</option>
+                            <option>Tablet / iPad</option>
+                            <option>Discord Bot / Community</option>
+                            <option>Web Services / Subdomain</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Detailed Description & Evidence Link</label>
+                        <textarea rows="6" placeholder="Provide full details, video/screenshot links, or exact error logs..." required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-red"><i class="fa-solid fa-paper-plane"></i> Submit Official Ticket</button>
+                </form>
+            </div>
+        </div>
+
+        <!-- DETAIL ARTICLE VIEW -->
+        <div id="detailView">
+            <button class="back-btn" onclick="goHome()"><i class="fa-solid fa-arrow-left"></i> <span id="txt-back">Back to Categories</span></button>
+            <div class="section-header">
+                <h2 id="categoryTitle">Category Name</h2>
+            </div>
+            <div class="article-content-box">
+                <h3 id="articleHeadline">Official Article Title</h3>
+                <div class="article-meta">
+                    <span id="articleMetaText"><i class="fa-solid fa-calendar-days"></i> October 2026 | Published by WIND'S Development Core Team</span>
+                </div>
+                <div class="article-body-text" id="articleBodyContainer"></div>
+            </div>
+        </div>
+
+    </div>
+<footer>
+    &copy; 2015 - 2026 WIND'S DEVELOPMENT. All Rights Reserved.
+</footer>
+</div>
+
+<div class="chat-widget-btn" onclick="window.open('https://dc.gg/winds.dev', '_blank')">
+    <i class="fa-solid fa-comment-dots"></i>
+</div>
+
+<script>
+let currentLang = 'en';
+let activeCategoryKey = null;
+let isGoogleAuthenticated = false;
+
+const CLIENT_ID = "77851011205-8fos4deh2ouop2rdb7u5ufju3ruql5ov.apps.googleusercontent.com";
+
+// Auto Initialize Google Identity SDK on Load
+window.onload = function () {
+    if (window.google && window.google.accounts && window.google.accounts.id) {
+        google.accounts.id.initialize({
+            client_id: CLIENT_ID,
+            callback: handleCredentialResponse,
+            auto_select: false
+        });
+    }
+};
+
+function triggerRealGoogleAuth() {
+    if (window.google && window.google.accounts && window.google.accounts.id) {
+        google.accounts.id.initialize({
+            client_id: CLIENT_ID,
+            callback: handleCredentialResponse
+        });
+        // Prompt Official Google Real Account Selection Popup
+        google.accounts.id.prompt((notification) => {
+            if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+                // Fallback Token Client Popup if One-Tap is restricted
+                useOAuthFallback();
+            }
+        });
+    } else {
+        alert("Google Library connection failed. Please check internet connection.");
+    }
+}
+
+function useOAuthFallback() {
+    const client = google.accounts.oauth2.initTokenClient({
+        client_id: CLIENT_ID,
+        scope: 'email profile',
+        callback: (tokenResponse) => {
+            if (tokenResponse.access_token) {
+                fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+                    headers: { Authorization: `Bearer ${tokenResponse.access_token}` }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.email) {
+                        onGoogleLoginSuccess(data.email, data.name);
+                    }
+                });
+            }
+        }
+    });
+    client.requestAccessToken();
+}
+
+function handleCredentialResponse(response) {
+    // Parse JWT token from Google
+    const payload = parseJwt(response.credential);
+    if (payload && payload.email) {
+        onGoogleLoginSuccess(payload.email, payload.name);
+    }
+}
+
+function parseJwt(token) {
+    try {
+        var base64Url = token.split('.')[1];
+        var base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        var jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+            return '%' + ('0' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+        return JSON.parse(jsonPayload);
+    } catch (e) {
+        return null;
+    }
+}
+
+function onGoogleLoginSuccess(email, name) {
+    isGoogleAuthenticated = true;
+    document.getElementById('btnGoogleAuth').style.display = 'none';
+    document.getElementById('userGoogleStatus').style.display = 'flex';
+    document.getElementById('loggedEmailText').textContent = email;
+
+    const nickInput = document.getElementById('inputNickname');
+    if (!nickInput.value && name) {
+        nickInput.value = name;
+    }
+}
+
+function scrollToTop() {
+    const a = document.getElementById('scrollArea');
+    if (a && a.scrollTo) { a.scrollTo({ top: 0, behavior: 'smooth' }); }
+    else { window.scrollTo(0, 0); }
+}
+
+function toggleSupportOptions() {
+    document.getElementById('helpOptionsBox').classList.toggle('active');
+}
+
+function handleCategorySelection(val) {
+    if (!val) return;
+    if (val === 'live') {
+        window.open('https://dc.gg/winds.dev', '_blank');
+        document.getElementById('supportCategorySelect').value = '';
+    } else {
+        openFullForm(val);
+    }
+}
+
+function openFullForm(type) {
+    document.getElementById('heroSection').style.display = 'none';
+    document.getElementById('homeView').style.display = 'none';
+    document.getElementById('detailView').style.display = 'none';
+    document.getElementById('fullFormView').style.display = 'block';
+
+    const titleElem = document.getElementById('formHeaderTitle');
+    if (type === 'report') {
+        titleElem.innerHTML = `<i class="fa-solid fa-flag" style="color:var(--accent-red)"></i> Report Player Form`;
+    } else {
+        titleElem.innerHTML = `<i class="fa-solid fa-bug" style="color:var(--accent-red)"></i> Submit Technical Issue Form`;
+    }
+    scrollToTop();
+}
+
+function handleFullFormSubmit(e) {
+    e.preventDefault();
+    if (!isGoogleAuthenticated) {
+        alert('Please sign in with Google first before submitting your ticket!');
+        triggerRealGoogleAuth();
+        return;
+    }
+    alert('Your ticket has been successfully submitted to WIND\'S Development team!');
+    goHome();
+}
+
+const translations = {
+    en: {
+        subHelp: "How Can We Help You?",
+        searchPlaceholder: "Search support articles, reports, or guides...",
+        boxTitle: "How to contact support?",
+        boxDesc: "If you have any questions, you can submit a ticket or contact us via our official developer support network — we're here for you.",
+        getHelpBtn: "Get Your Help!",
+        selectCatLbl: "SELECT CATEGORY",
+        kbTitle: "Knowledge Base Categories",
+        catNewsTitle: "News",
+        catNewsDesc: "Up-to-date information about project news, patches, and dev logs.",
+        catGuideTitle: "Beginner's Guide",
+        catGuideDesc: "A comprehensive guide to help you get started with our platforms and apps.",
+        catAccountTitle: "Account Issues",
+        catAccountDesc: "Recommendations for users on protecting and recovering their accounts.",
+        catPaymentsTitle: "Payments and Purchases",
+        catPaymentsDesc: "Answers to questions related to store payments, subscriptions, and billing.",
+        catViolationsTitle: "Violations and Sanctions",
+        catViolationsDesc: "Community rules, ban appeals, and enforcement policies details.",
+        catFaqTitle: "FAQ",
+        catFaqDesc: "Frequently Asked Questions regarding host servers, bot commands, and dev tools.",
+        backBtn: "Back to Categories",
+        formBack: "Back to Home"
+    },
+    hi: {
+        subHelp: "हम आपकी क्या सहायता कर सकते हैं?",
+        searchPlaceholder: "सहायता लेख, रिपोर्ट या गाइड खोजें...",
+        boxTitle: "सहायता टीम से कैसे संपर्क करें?",
+        boxDesc: "यदि आपके कोई प्रश्न हैं, तो आप टिकट जमा कर सकते हैं या हमारे आधिकारिक डेवलपर सहायता नेटवर्क के माध्यम से हमसे संपर्क कर सकते हैं - हम यहां आपके लिए हैं।",
+        getHelpBtn: "Get Your Help!",
+        selectCatLbl: "श्रेणी चुनें",
+        kbTitle: "नॉलेज बेस श्रेणियां",
+        catNewsTitle: "समाचार",
+        catNewsDesc: "प्रोजेक्ट समाचार, पैच और देव लॉग के बारे में नवीनतम जानकारी।",
+        catGuideTitle: "शुरुआती गाइड",
+        catGuideDesc: "हमारे प्लेटफॉर्म और ऐप्स के साथ शुरुआत करने में आपकी सहायता के लिए गाइड।",
+        catAccountTitle: "खाता संबंधी समस्याएं",
+        catAccountDesc: "उपयोगकर्ताओं के लिए अपने खातों की सुरक्षा और पुनर्प्राप्ति की सिफारिशें।",
+        catPaymentsTitle: "भुगतान और खरीदारी",
+        catPaymentsDesc: "स्टोर भुगतान, सदस्यता और बिलिंग से संबंधित प्रश्नों के उत्तर।",
+        catViolationsTitle: "उल्लंघन और प्रतिबंध",
+        catViolationsDesc: "समुदाय के नियम, बैन अपील और प्रवर्तन नीतियों के विवरण।",
+        catFaqTitle: "अक्सर पूछे जाने वाले प्रश्न",
+        catFaqDesc: "होस्ट सर्वर, बॉट कमांड और देव टूल के बारे में अक्सर पूछे जाने वाले प्रश्न।",
+        backBtn: "श्रेणियों पर वापस जाएं",
+        formBack: "मुख्य पृष्ठ पर वापस जाएं"
+    },
+    hinglish: {
+        subHelp: "Hum Aapki Kya Help Kar Sakte Hain?",
+        searchPlaceholder: "Support articles, reports, ya guides search karein...",
+        boxTitle: "Support team se kaise contact karein?",
+        boxDesc: "Agar aapka koi question hai, toh aap ticket submit kar sakte hain ya direct humare developer network se connect ho sakte hain — hum aapki help ke liye yahan hain.",
+        getHelpBtn: "Get Your Help!",
+        selectCatLbl: "SELECT CATEGORY",
+        kbTitle: "Knowledge Base Categories",
+        catNewsTitle: "News & Updates",
+        catNewsDesc: "Project news, patches, aur dev logs ki latest jankari.",
+        catGuideTitle: "Beginner's Guide",
+        catGuideDesc: "WIND'S platforms aur apps ke sath start karne ke liye simple guide.",
+        catAccountTitle: "Account Issues",
+        catAccountDesc: "Accounts ko secure rakhne aur recover karne ki guidelines.",
+        catPaymentsTitle: "Payments & Purchases",
+        catPaymentsDesc: "Store payments, subscriptions, aur billing se jude sawaalon ke jawab.",
+        catViolationsTitle: "Violations & Sanctions",
+        catViolationsDesc: "Community rules, ban appeals, aur enforcement details.",
+        catFaqTitle: "FAQ",
+        catFaqDesc: "Host servers, bot commands, aur dev tools ke regarding frequently asked questions.",
+        backBtn: "Back Categories Par Chalein",
+        formBack: "Home Par Chalein"
+    },
+    ru: {
+        subHelp: "Как мы можем вам помочь?",
+        searchPlaceholder: "Поиск статей поддержки, отчетов или руководств...",
+        boxTitle: "Как связаться с поддержкой?",
+        boxDesc: "Если у вас есть вопросы, вы можете отправить тикет или связаться с нами.",
+        getHelpBtn: "Get Your Help!",
+        selectCatLbl: "ВЫБЕРИТЕ КАТЕГОРИЮ",
+        kbTitle: "Категории базы знаний",
+        catNewsTitle: "Новости",
+        catNewsDesc: "Информация о проекте и обновлениях.",
+        catGuideTitle: "Руководство",
+        catGuideDesc: "Руководство для новых пользователей.",
+        catAccountTitle: "Аккаунт",
+        catAccountDesc: "Защита аккаунтов.",
+        catPaymentsTitle: "Платежи",
+        catPaymentsDesc: "Ответы о платежах.",
+        catViolationsTitle: "Нарушения",
+        catViolationsDesc: "Правила сообщества.",
+        catFaqTitle: "FAQ",
+        catFaqDesc: "Часто задаваемые вопросы.",
+        backBtn: "Назад к категориям",
+        formBack: "На главную"
+    },
+    es: {
+        subHelp: "¿Cómo podemos ayudarte?",
+        searchPlaceholder: "Buscar artículos de soporte...",
+        boxTitle: "¿Cómo contactar con soporte?",
+        boxDesc: "Si tienes alguna pregunta, puedes enviar un ticket o contactarnos.",
+        getHelpBtn: "Get Your Help!",
+        selectCatLbl: "SELECCIONAR CATEGORÍA",
+        kbTitle: "Categorías de conocimientos",
+        catNewsTitle: "Noticias",
+        catNewsDesc: "Información sobre parches.",
+        catGuideTitle: "Guía",
+        catGuideDesc: "Guía para principiantes.",
+        catAccountTitle: "Cuentas",
+        catAccountDesc: "Seguridad de cuentas.",
+        catPaymentsTitle: "Pagos",
+        catPaymentsDesc: "Facturación y compras.",
+        catViolationsTitle: "Sanciones",
+        catViolationsDesc: "Reglas de la comunidad.",
+        catFaqTitle: "FAQ",
+        catFaqDesc: "Preguntas frecuentes.",
+        backBtn: "Volver",
+        formBack: "Inicio"
+    }
+};
+
+const ARTICLES = {
+en: {
+ news: {t:`News & Announcements`, h:`Official Announcement: WIND'S Development Infrastructure & Ecosystem Expansion (2015–2026)`, b:`<p>Welcome to the official <strong>WIND'S Development</strong> News portal. Established in 2015, WIND'S has consistently evolved as a pioneering initiative dedicated to engineering high-performance digital solutions, immersive open-world mobile game projects, and advanced Discord community automation systems (such as <strong>RAZE™</strong> and <strong>ZYRAX</strong>).</p><h4>Key System & Project Updates:</h4><ul><li><strong>Ecosystem Optimization:</strong> Our development pipelines across mobile platforms have been thoroughly optimized to ensure lightning-fast execution, enhanced stability, and seamless user experiences.</li><li><strong>Infrastructure Upgrades:</strong> All active cloud deployments, custom developer subdomains, and bot hosting servers have transitioned to high-availability architecture, guaranteeing 24/7 uptime and zero-latency performance.</li></ul>`, d:`Join our official support community on Discord for real-time announcements:`},
+ guide: {t:`Beginner's Guide`, h:`Getting Started with WIND'S Development Projects & Community Platforms`, b:`<p>Welcome to the official <strong>WIND'S Development (EST. 2015)</strong> Beginner's Guide. Whether you are interacting with our custom mobile web applications, open-world game projects, or utilizing our specialized Discord bots, this guide provides all necessary steps to ensure a smooth onboarding experience.</p><h4>1. Navigating Our Ecosystem:</h4><p>WIND'S Development engineers multi-platform solutions designed for responsive performance across mobile devices, tablets, and desktop environments.</p>`, d:`Need onboarding help or live developer assistance? Join our Discord server:`},
+ account: {t:`Account Issues`, h:`Account Security, Synchronization & Recovery Protocol`, b:`<p>Maintaining security across <strong>WIND'S Development</strong> services and community credentials is essential. This document outlines best practices for securing your digital profile.</p><h4>Security Guidelines & Best Practices:</h4><ul><li><strong>Two-Factor Authentication (2FA):</strong> Always enable 2FA on your connected Discord accounts.</li><li><strong>Credential Protection:</strong> WIND'S Development staff members will <em>never</em> ask for your passwords or tokens.</li></ul>`, d:`Need emergency account recovery or direct staff assistance? Contact us at:`},
+ payments: {t:`Payments and Purchases`, h:`Store Transactions, Hosting Credits & Billing Support`, b:`<p>All financial transactions, server hosting contributions, and store purchases made within the <strong>WIND'S Development (EST. 2015)</strong> ecosystem are processed through verified, encrypted gateways.</p><h4>Billing Protocols & Transaction Verification:</h4><ul><li><strong>Processing Times:</strong> Digital perks and hosting credits are credited instantly upon transaction verification.</li><li><strong>Failed Transactions:</strong> If payment was deducted without perks being applied, retain your transaction receipt and submit a ticket.</li></ul>`, d:`Submit a billing ticket or inquire about host subscriptions on Discord:`},
+ violations: {t:`Violations and Sanctions`, h:`Community Code of Conduct, Enforcement & Ban Appeals`, b:`<p>To foster a respectful and secure environment across <strong>WIND'S Development</strong> platforms, strict adherence to our Code of Conduct is enforced.</p><h4>Enforcement Standards:</h4><ul><li><strong>Zero Tolerance:</strong> Exploiting bugs, using third-party cheats, or abusive behavior results in permanent blacklisting.</li></ul>`, d:`Submit a ban appeal or speak with senior management:`},
+ faq: {t:`FAQ`, h:`Frequently Asked Questions Regarding WIND'S Infrastructure`, b:`<p>Find quick technical answers regarding <strong>WIND'S Development (EST. 2015)</strong> operations below.</p><h4>Q1: What is WIND'S Development?</h4><p>Established in 2015, WIND'S Development builds web apps, Discord bot systems (RAZE™, ZYRAX), and mobile game projects.</p>`, d:`Have a question not listed here? Ask our community on Discord:`}
+},
+hi: {
+ news: {t:`समाचार और घोषणाएं`, h:`आधिकारिक घोषणा: WIND'S Development इंफ्रास्ट्रक्चर और इकोसिस्टम विस्तार (2015–2026)`, b:`<p>आधिकारिक <strong>WIND'S Development</strong> समाचार पोर्टल पर आपका स्वागत है। 2015 में स्थापित, WIND'S लगातार उच्च प्रदर्शन वाले डिजिटल समाधान, ओपन-वर्ल्ड मोबाइल गेम प्रोजेक्ट्स और उन्नत डिस्कॉर्ड ऑटोमेशन सिस्टम (जैसे <strong>RAZE™</strong> और <strong>ZYRAX</strong>) विकसित कर रहा है।</p><h4>मुख्य सिस्टम और प्रोजेक्ट अपडेट:</h4><ul><li><strong>इकोसिस्टम ऑप्टिमाइज़ेशन:</strong> मोबाइल प्लेटफॉर्म पर हमारी डेवलपमेंट पाइपलाइन को तेज़ प्रदर्शन, बेहतर स्थिरता और सहज अनुभव के लिए पूरी तरह ऑप्टिमाइज़ किया गया है।</li><li><strong>इंफ्रास्ट्रक्चर अपग्रेड:</strong> सभी क्लाउड डिप्लॉयमेंट, कस्टम डेवलपर सबडोमेन और बॉट होस्टिंग सर्वर हाई-अवेलेबिलिटी आर्किटेक्चर पर आ गए हैं, जिससे 24/7 अपटाइम और बेहद कम लेटेंसी मिलती है।</li></ul>`, d:`रीयल-टाइम घोषणाओं के लिए हमारी आधिकारिक डिस्कॉर्ड सपोर्ट कम्युनिटी से जुड़ें:`},
+ guide: {t:`शुरुआती गाइड`, h:`WIND'S Development प्रोजेक्ट्स और कम्युनिटी प्लेटफॉर्म्स के साथ शुरुआत करें`, b:`<p>आधिकारिक <strong>WIND'S Development (EST. 2015)</strong> शुरुआती गाइड में आपका स्वागत है। चाहे आप हमारे कस्टम मोबाइल वेब ऐप्स और ओपन-वर्ल्ड गेम प्रोजेक्ट्स का उपयोग कर रहे हों या हमारे खास डिस्कॉर्ड बॉट्स का, यह गाइड आपको शुरुआत के सभी ज़रूरी स्टेप्स बताएगी।</p><h4>1. हमारा इकोसिस्टम समझें:</h4><p>WIND'S Development ऐसे मल्टी-प्लेटफॉर्म समाधान बनाता है जो मोबाइल, टैबलेट और डेस्कटॉप पर तेज़ और रिस्पॉन्सिव चलते हैं।</p>`, d:`ऑनबोर्डिंग मदद या लाइव डेवलपर सहायता चाहिए? हमारे डिस्कॉर्ड सर्वर से जुड़ें:`},
+ account: {t:`खाता संबंधी समस्याएं`, h:`खाता सुरक्षा, सिंक्रनाइज़ेशन और रिकवरी प्रोटोकॉल`, b:`<p><strong>WIND'S Development</strong> सेवाओं और कम्युनिटी क्रेडेंशियल्स की सुरक्षा बहुत ज़रूरी है। इस दस्तावेज़ में आपकी डिजिटल प्रोफ़ाइल सुरक्षित रखने के सर्वोत्तम तरीके दिए गए हैं।</p><h4>सुरक्षा दिशानिर्देश और सर्वोत्तम प्रथाएं:</h4><ul><li><strong>टू-फैक्टर ऑथेंटिकेशन (2FA):</strong> अपने जुड़े हुए डिस्कॉर्ड अकाउंट्स पर हमेशा 2FA चालू रखें।</li><li><strong>क्रेडेंशियल सुरक्षा:</strong> WIND'S Development का स्टाफ आपसे <em>कभी भी</em> पासवर्ड या टोकन नहीं मांगेगा।</li></ul>`, d:`इमरजेंसी अकाउंट रिकवरी या स्टाफ से सीधी मदद चाहिए? यहाँ संपर्क करें:`},
+ payments: {t:`भुगतान और खरीदारी`, h:`स्टोर ट्रांज़ैक्शन, होस्टिंग क्रेडिट और बिलिंग सहायता`, b:`<p><strong>WIND'S Development (EST. 2015)</strong> इकोसिस्टम में किए गए सभी वित्तीय लेनदेन, सर्वर होस्टिंग योगदान और स्टोर खरीदारी सत्यापित और एन्क्रिप्टेड गेटवे से प्रोसेस होते हैं।</p><h4>बिलिंग प्रोटोकॉल और ट्रांज़ैक्शन सत्यापन:</h4><ul><li><strong>प्रोसेसिंग समय:</strong> डिजिटल पर्क्स और होस्टिंग क्रेडिट ट्रांज़ैक्शन सत्यापित होते ही तुरंत जुड़ जाते हैं।</li><li><strong>फेल हुए ट्रांज़ैक्शन:</strong> अगर पैसे कट गए लेकिन पर्क्स नहीं मिले, तो अपनी ट्रांज़ैक्शन रसीद संभालकर रखें और टिकट जमा करें।</li></ul>`, d:`बिलिंग टिकट जमा करें या होस्ट सब्सक्रिप्शन के बारे में डिस्कॉर्ड पर पूछें:`},
+ violations: {t:`उल्लंघन और प्रतिबंध`, h:`कम्युनिटी आचार संहिता, प्रवर्तन और बैन अपील`, b:`<p><strong>WIND'S Development</strong> प्लेटफॉर्म्स पर सम्मानजनक और सुरक्षित माहौल बनाए रखने के लिए हमारी आचार संहिता का कड़ाई से पालन कराया जाता है।</p><h4>प्रवर्तन मानक:</h4><ul><li><strong>ज़ीरो टॉलरेंस:</strong> बग्स का फायदा उठाना, थर्ड-पार्टी चीट्स का उपयोग या अपमानजनक व्यवहार करने पर स्थायी ब्लैकलिस्ट कर दिया जाएगा।</li></ul>`, d:`बैन अपील जमा करें या सीनियर मैनेजमेंट से बात करें:`},
+ faq: {t:`अक्सर पूछे जाने वाले प्रश्न`, h:`WIND'S इंफ्रास्ट्रक्चर के बारे में सामान्य प्रश्न`, b:`<p><strong>WIND'S Development (EST. 2015)</strong> के संचालन से जुड़े तकनीकी प्रश्नों के त्वरित उत्तर नीचे दिए गए हैं।</p><h4>प्र1: WIND'S Development क्या है?</h4><p>2015 में स्थापित, WIND'S Development वेब ऐप्स, डिस्कॉर्ड बॉट सिस्टम (RAZE™, ZYRAX) और मोबाइल गेम प्रोजेक्ट्स बनाता है।</p>`, d:`कोई सवाल यहाँ नहीं है? हमारी कम्युनिटी से डिस्कॉर्ड पर पूछें:`}
+},
+hinglish: {
+ news: {t:`News & Announcements`, h:`Official Announcement: WIND'S Development Infrastructure aur Ecosystem Expansion (2015–2026)`, b:`<p>Official <strong>WIND'S Development</strong> News portal me aapka swagat hai. 2015 me shuru hua WIND'S lagatar high-performance digital solutions, open-world mobile game projects aur advanced Discord automation systems (jaise <strong>RAZE™</strong> aur <strong>ZYRAX</strong>) bana raha hai.</p><h4>Key System & Project Updates:</h4><ul><li><strong>Ecosystem Optimization:</strong> Mobile platforms par hamari development pipelines ko fast execution, better stability aur smooth experience ke liye poori tarah optimize kiya gaya hai.</li><li><strong>Infrastructure Upgrades:</strong> Saare cloud deployments, custom developer subdomains aur bot hosting servers high-availability architecture par shift ho gaye hain, jisse 24/7 uptime aur zero-latency performance milti hai.</li></ul>`, d:`Real-time announcements ke liye hamari official Discord support community join karein:`},
+ guide: {t:`Beginner's Guide`, h:`WIND'S Development Projects aur Community Platforms ke sath Start Karein`, b:`<p>Official <strong>WIND'S Development (EST. 2015)</strong> Beginner's Guide me aapka swagat hai. Chahe aap hamare custom mobile web apps aur open-world game projects use kar rahe ho ya specialized Discord bots, ye guide aapko smooth onboarding ke saare steps batayegi.</p><h4>1. Hamara Ecosystem Samjhein:</h4><p>WIND'S Development multi-platform solutions banata hai jo mobile, tablet aur desktop par responsive performance dete hain.</p>`, d:`Onboarding help ya live developer assistance chahiye? Hamare Discord server se judein:`},
+ account: {t:`Account Issues`, h:`Account Security, Synchronization aur Recovery Protocol`, b:`<p><strong>WIND'S Development</strong> services aur community credentials ki security bahut zaroori hai. Is document me aapki digital profile ko secure rakhne ke best practices diye gaye hain.</p><h4>Security Guidelines & Best Practices:</h4><ul><li><strong>Two-Factor Authentication (2FA):</strong> Apne connected Discord accounts par hamesha 2FA on rakhein.</li><li><strong>Credential Protection:</strong> WIND'S Development ka staff aapse <em>kabhi bhi</em> password ya token nahi maangega.</li></ul>`, d:`Emergency account recovery ya direct staff help chahiye? Yahan contact karein:`},
+ payments: {t:`Payments and Purchases`, h:`Store Transactions, Hosting Credits aur Billing Support`, b:`<p><strong>WIND'S Development (EST. 2015)</strong> ecosystem me hone wale saare financial transactions, server hosting contributions aur store purchases verified, encrypted gateways se process hote hain.</p><h4>Billing Protocols & Transaction Verification:</h4><ul><li><strong>Processing Time:</strong> Digital perks aur hosting credits transaction verify hote hi turant mil jaate hain.</li><li><strong>Failed Transactions:</strong> Agar paisa kat gaya lekin perks nahi mile, toh apni transaction receipt sambhal ke rakhein aur ticket submit karein.</li></ul>`, d:`Billing ticket submit karein ya host subscriptions ke baare me Discord par poochhein:`},
+ violations: {t:`Violations and Sanctions`, h:`Community Code of Conduct, Enforcement aur Ban Appeals`, b:`<p><strong>WIND'S Development</strong> platforms par respectful aur secure mahaul banaye rakhne ke liye Code of Conduct ka strictly palan karaya jaata hai.</p><h4>Enforcement Standards:</h4><ul><li><strong>Zero Tolerance:</strong> Bugs exploit karna, third-party cheats use karna ya abusive behavior karne par permanent blacklist kar diya jaata hai.</li></ul>`, d:`Ban appeal submit karein ya senior management se baat karein:`},
+ faq: {t:`FAQ`, h:`WIND'S Infrastructure ke baare me Frequently Asked Questions`, b:`<p><strong>WIND'S Development (EST. 2015)</strong> ki operations se jude technical sawaalon ke quick jawab neeche दिए गए हैं।</p><h4>Q1: WIND'S Development kya hai?</h4><p>2015 me establish hua WIND'S Development web apps, Discord bot systems (RAZE™, ZYRAX) aur mobile game projects banata hai.</p>`, d:`Koi sawaal yahan nahi hai? Hamari community se Discord par poochhein:`}
+},
+ru: {
+ news: {t:`Новости и объявления`, h:`Официальное объявление: развитие инфраструктуры и экосистемы WIND'S Development (2015–2026)`, b:`<p>Добро пожаловать на официальный новостной портал <strong>WIND'S Development</strong>. Основанная в 2015 году, команда WIND'S разрабатывает высокопроизводительные цифровые решения, мобильные игры с открытым миром и системы автоматизации для сообществ Discord (такие как <strong>RAZE™</strong> и <strong>ZYRAX</strong>).</p><h4>Основные обновления систем и проектов:</h4><ul><li><strong>Оптимизация экосистемы:</strong> наши процессы разработки для мобильных платформ полностью оптимизированы для высокой скорости, стабильности и удобной работы.</li><li><strong>Обновление инфраструктуры:</strong> все облачные развёртывания, поддомены разработчиков и серверы хостинга ботов переведены на архитектуру высокой доступности: работа 24/7 и минимальные задержки.</li></ul>`, d:`Присоединяйтесь к нашему официальному сообществу в Discord, чтобы получать объявления в реальном времени:`},
+ guide: {t:`Руководство для новичков`, h:`Начало работы с проектами и платформами сообщества WIND'S Development`, b:`<p>Добро пожаловать в официальное руководство для новичков <strong>WIND'S Development (EST. 2015)</strong>. Используете ли вы наши мобильные веб-приложения и игры с открытым миром или специальных Discord-ботов, это руководство поможет вам легко начать.</p><h4>1. Знакомство с нашей экосистемой:</h4><p>WIND'S Development создаёт мультиплатформенные решения, которые быстро и адаптивно работают на телефонах, планшетах и компьютерах.</p>`, d:`Нужна помощь с началом работы или живая поддержка разработчиков? Заходите на наш Discord-сервер:`},
+ account: {t:`Проблемы с аккаунтом`, h:`Безопасность аккаунта, синхронизация и восстановление`, b:`<p>Защита сервисов <strong>WIND'S Development</strong> и данных сообщества очень важна. В этом документе описаны лучшие практики защиты вашего цифрового профиля.</p><h4>Рекомендации по безопасности:</h4><ul><li><strong>Двухфакторная аутентификация (2FA):</strong> всегда включайте 2FA на привязанных аккаунтах Discord.</li><li><strong>Защита данных:</strong> сотрудники WIND'S Development <em>никогда</em> не попросят у вас пароли или токены.</li></ul>`, d:`Нужно срочное восстановление аккаунта или помощь сотрудников? Свяжитесь с нами:`},
+ payments: {t:`Платежи и покупки`, h:`Транзакции в магазине, кредиты хостинга и поддержка по оплате`, b:`<p>Все финансовые операции, взносы на хостинг серверов и покупки в магазине экосистемы <strong>WIND'S Development (EST. 2015)</strong> проходят через проверенные зашифрованные платёжные шлюзы.</p><h4>Порядок оплаты и подтверждения транзакций:</h4><ul><li><strong>Время обработки:</strong> цифровые бонусы и кредиты хостинга начисляются сразу после подтверждения транзакции.</li><li><strong>Неудачные транзакции:</strong> если деньги списаны, а бонусы не начислены, сохраните чек и отправьте тикет.</li></ul>`, d:`Отправьте тикет по оплате или спросите о подписках на хостинг в Discord:`},
+ violations: {t:`Нарушения и санкции`, h:`Кодекс поведения сообщества, меры воздействия и апелляции`, b:`<p>Чтобы поддерживать уважительную и безопасную среду на платформах <strong>WIND'S Development</strong>, мы строго следим за соблюдением Кодекса поведения.</p><h4>Стандарты применения мер:</h4><ul><li><strong>Нулевая терпимость:</strong> использование багов, сторонних читов или оскорбительное поведение приводят к постоянной блокировке.</li></ul>`, d:`Подайте апелляцию на бан или поговорите с руководством:`},
+ faq: {t:`Частые вопросы`, h:`Часто задаваемые вопросы об инфраструктуре WIND'S`, b:`<p>Ниже вы найдёте быстрые технические ответы о работе <strong>WIND'S Development (EST. 2015)</strong>.</p><h4>В1: Что такое WIND'S Development?</h4><p>Основанная в 2015 году, WIND'S Development создаёт веб-приложения, системы Discord-ботов (RAZE™, ZYRAX) и мобильные игры.</p>`, d:`Не нашли ответ на свой вопрос? Спросите наше сообщество в Discord:`}
+},
+es: {
+ news: {t:`Noticias y anuncios`, h:`Anuncio oficial: expansión de la infraestructura y el ecosistema de WIND'S Development (2015–2026)`, b:`<p>Bienvenido al portal oficial de noticias de <strong>WIND'S Development</strong>. Fundado en 2015, WIND'S ha evolucionado como una iniciativa dedicada a crear soluciones digitales de alto rendimiento, juegos móviles de mundo abierto y sistemas avanzados de automatización para comunidades de Discord (como <strong>RAZE™</strong> y <strong>ZYRAX</strong>).</p><h4>Actualizaciones clave de sistemas y proyectos:</h4><ul><li><strong>Optimización del ecosistema:</strong> nuestros procesos de desarrollo en plataformas móviles se han optimizado a fondo para lograr mayor velocidad, estabilidad y una experiencia fluida.</li><li><strong>Mejoras de infraestructura:</strong> todos los despliegues en la nube, subdominios de desarrollador y servidores de alojamiento de bots pasaron a una arquitectura de alta disponibilidad, con funcionamiento 24/7 y latencia mínima.</li></ul>`, d:`Únete a nuestra comunidad oficial de Discord para recibir anuncios en tiempo real:`},
+ guide: {t:`Guía para principiantes`, h:`Primeros pasos con los proyectos y plataformas de la comunidad de WIND'S Development`, b:`<p>Te damos la bienvenida a la guía oficial para principiantes de <strong>WIND'S Development (EST. 2015)</strong>. Ya uses nuestras aplicaciones web móviles, juegos de mundo abierto o nuestros bots de Discord, esta guía te explica todo lo necesario para empezar sin problemas.</p><h4>1. Conoce nuestro ecosistema:</h4><p>WIND'S Development crea soluciones multiplataforma con un rendimiento adaptable en móviles, tabletas y ordenadores.</p>`, d:`¿Necesitas ayuda para empezar o asistencia en vivo de los desarrolladores? Únete a nuestro servidor de Discord:`},
+ account: {t:`Problemas de cuenta`, h:`Seguridad, sincronización y recuperación de cuentas`, b:`<p>Mantener seguros los servicios de <strong>WIND'S Development</strong> y las credenciales de la comunidad es fundamental. Este documento recoge las mejores prácticas para proteger tu perfil digital.</p><h4>Pautas y buenas prácticas de seguridad:</h4><ul><li><strong>Autenticación en dos pasos (2FA):</strong> activa siempre la 2FA en tus cuentas de Discord vinculadas.</li><li><strong>Protección de credenciales:</strong> el personal de WIND'S Development <em>nunca</em> te pedirá contraseñas ni tokens.</li></ul>`, d:`¿Necesitas recuperar tu cuenta con urgencia o hablar con el personal? Contáctanos en:`},
+ payments: {t:`Pagos y compras`, h:`Transacciones de la tienda, créditos de alojamiento y soporte de facturación`, b:`<p>Todas las transacciones, aportaciones de alojamiento de servidores y compras en la tienda del ecosistema <strong>WIND'S Development (EST. 2015)</strong> se procesan mediante pasarelas verificadas y cifradas.</p><h4>Protocolos de facturación y verificación:</h4><ul><li><strong>Tiempos de procesamiento:</strong> las ventajas digitales y los créditos de alojamiento se acreditan al instante tras verificar la transacción.</li><li><strong>Transacciones fallidas:</strong> si se descontó el pago pero no recibiste las ventajas, conserva tu recibo y envía un ticket.</li></ul>`, d:`Envía un ticket de facturación o consulta sobre suscripciones de alojamiento en Discord:`},
+ violations: {t:`Infracciones y sanciones`, h:`Código de conducta, medidas disciplinarias y apelaciones de baneos`, b:`<p>Para mantener un entorno respetuoso y seguro en las plataformas de <strong>WIND'S Development</strong>, se exige el cumplimiento estricto de nuestro Código de conducta.</p><h4>Normas de aplicación:</h4><ul><li><strong>Tolerancia cero:</strong> aprovechar errores, usar trampas de terceros o tener un comportamiento abusivo conlleva la inclusión permanente en la lista negra.</li></ul>`, d:`Envía una apelación de baneo o habla con la dirección:`},
+ faq: {t:`Preguntas frecuentes`, h:`Preguntas frecuentes sobre la infraestructura de WIND'S`, b:`<p>Aquí encontrarás respuestas técnicas rápidas sobre el funcionamiento de <strong>WIND'S Development (EST. 2015)</strong>.</p><h4>P1: ¿Qué es WIND'S Development?</h4><p>Fundado en 2015, WIND'S Development crea aplicaciones web, sistemas de bots de Discord (RAZE™, ZYRAX) y proyectos de juegos móviles.</p>`, d:`¿Tienes una pregunta que no está aquí? Pregunta a nuestra comunidad en Discord:`}
+}
+};
+
+const EXTRA = {
+ en: {meta:`October 2026 | Published by WIND'S Development Core Team`, count:`1 article`, help:`Get Your Help!`, opts:[`1. REPORT PLAYER`,`2. SUBMIT TECHNICAL ISSUE`,`3. LIVE SUPPORT`]},
+ hi: {meta:`अक्टूबर 2026 | WIND'S Development कोर टीम द्वारा प्रकाशित`, count:`1 लेख`, help:`मदद पाएं!`, opts:[`1. प्लेयर रिपोर्ट करें`,`2. तकनीकी समस्या जमा करें`,`3. लाइव सपोर्ट`]},
+ hinglish: {meta:`October 2026 | WIND'S Development Core Team dwara published`, count:`1 article`, help:`Help Paayein!`, opts:[`1. Player Report Karein`,`2. Technical Issue Submit Karein`,`3. Live Support`]},
+ ru: {meta:`Октябрь 2026 | Опубликовано командой WIND'S Development`, count:`1 статья`, help:`Получить помощь!`, opts:[`1. Пожаловаться на игрока`,`2. Сообщить о технической проблеме`,`3. Онлайн-поддержка`]},
+ es: {meta:`Octubre 2026 | Publicado por el equipo de WIND'S Development`, count:`1 artículo`, help:`¡Obtén ayuda!`, opts:[`1. Reportar jugador`,`2. Enviar problema técnico`,`3. Soporte en vivo`]}
+};
+
+function renderArticleContent(key) {
+    activeCategoryKey = key;
+    const a = (ARTICLES[currentLang] && ARTICLES[currentLang][key]) || ARTICLES.en[key];
+    const x = EXTRA[currentLang] || EXTRA.en;
+    document.getElementById('categoryTitle').textContent = a.t;
+    document.getElementById('articleHeadline').textContent = a.h;
+    document.getElementById('articleMetaText').innerHTML = `<i class="fa-solid fa-calendar-days"></i> ${x.meta}`;
+    document.getElementById('articleBodyContainer').innerHTML = a.b + `<div class="discord-box"><i class="fa-brands fa-discord"></i> ${a.d} <a href="https://dc.gg/winds.dev" target="_blank">dc.gg/winds.dev</a></div>`;
+}
+
+function applyExtraTranslations() {
+    const t = translations[currentLang] || translations.en;
+    const x = EXTRA[currentLang] || EXTRA.en;
+    document.getElementById('btn-get-help-text').textContent = x.help;
+    document.querySelectorAll('.article-count').forEach(el => { el.textContent = x.count; });
+    const sel = document.getElementById('supportCategorySelect');
+    sel.options[0].text = t.selectCatLbl;
+    [1, 2, 3].forEach(i => { sel.options[i].text = x.opts[i - 1]; });
+}
+
+function changeLanguage(lang) {
+    currentLang = lang;
+    const t = translations[lang] || translations.en;
+
+    document.getElementById('txt-sub-help').textContent = t.subHelp;
+    document.getElementById('searchInput').placeholder = t.searchPlaceholder;
+    document.getElementById('txt-box-title').textContent = t.boxTitle;
+    document.getElementById('txt-box-desc').textContent = t.boxDesc;
+    document.getElementById('btn-get-help-text').textContent = t.getHelpBtn;
+    document.getElementById('lbl-select-cat').innerHTML = `<i class="fa-solid fa-layer-group"></i> ${t.selectCatLbl}`;
+    document.getElementById('txt-kb-title').textContent = t.kbTitle;
+
+    document.getElementById('cat-news-title').textContent = t.catNewsTitle;
+    document.getElementById('cat-news-desc').textContent = t.catNewsDesc;
+    document.getElementById('cat-guide-title').textContent = t.catGuideTitle;
+    document.getElementById('cat-guide-desc').textContent = t.catGuideDesc;
+    document.getElementById('cat-account-title').textContent = t.catAccountTitle;
+    document.getElementById('cat-account-desc').textContent = t.catAccountDesc;
+    document.getElementById('cat-payments-title').textContent = t.catPaymentsTitle;
+    document.getElementById('cat-payments-desc').textContent = t.catPaymentsDesc;
+    document.getElementById('cat-violations-title').textContent = t.catViolationsTitle;
+    document.getElementById('cat-violations-desc').textContent = t.catViolationsDesc;
+    document.getElementById('cat-faq-title').textContent = t.catFaqTitle;
+    document.getElementById('cat-faq-desc').textContent = t.catFaqDesc;
+
+    document.getElementById('txt-back').textContent = t.backBtn;
+    applyExtraTranslations();
+    if (document.getElementById('txt-form-back')) {
+        document.getElementById('txt-form-back').textContent = t.formBack;
+    }
+
+    if (activeCategoryKey) {
+        renderArticleContent(activeCategoryKey);
+    }
+}
+
+function openCategory(key) {
+    document.getElementById('heroSection').style.display = 'none';
+    document.getElementById('homeView').style.display = 'none';
+    document.getElementById('fullFormView').style.display = 'none';
+    document.getElementById('detailView').style.display = 'block';
+    renderArticleContent(key);
+    scrollToTop();
+}
+
+function goHome() {
+    activeCategoryKey = null;
+    document.getElementById('detailView').style.display = 'none';
+    document.getElementById('fullFormView').style.display = 'none';
+    document.getElementById('heroSection').style.display = 'block';
+    document.getElementById('homeView').style.display = 'block';
+    document.getElementById('searchBoxContainer').style.display = 'block';
+    document.getElementById('supportCategorySelect').value = '';
+    scrollToTop();
+}
+
+document.getElementById('searchInput').addEventListener('input', function(e) {
+    const query = e.target.value.toLowerCase();
+    document.querySelectorAll('.category-card').forEach(card => {
+        const title = card.querySelector('h3').textContent.toLowerCase();
+        const desc = card.querySelector('p').textContent.toLowerCase();
+        card.style.display = (title.includes(query) || desc.includes(query)) ? 'flex' : 'none';
+    });
+});
+</script>
+</body>
+</html>
