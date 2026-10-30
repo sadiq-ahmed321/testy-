@@ -311,11 +311,7 @@ footer { margin-top: auto; text-align: center; padding: 25px; border-top: 1px so
                     <div class="form-group">
                         <label id="lblIssueType">Which kinda Issue?</label>
                         <select id="selectIssueType" required>
-                            <option value="BUG">BUG</option>
-                            <option value="WEBSITE ISSUE">WEBSITE ISSUE</option>
-                            <option value="IN-GAME ISSUE">IN-GAME ISSUE</option>
-                            <option value="DISCORD COMMUNITY">DISCORD COMMUNITY</option>
-                            <option value="OTHER">OTHER</option>
+                            <option value="" disabled selected id="defaultSelectOpt">SELECT AN ISSUE</option>
                         </select>
                     </div>
 
@@ -484,6 +480,7 @@ function updateFormContent() {
         subtextElem.textContent = t.reportSubtext;
         labelIssueType.textContent = t.reportReasonLabel;
         selectIssueType.innerHTML = `
+            <option value="" disabled selected>${t.selectAnIssue}</option>
             <option value="HACKING / CHEATING">${t.optHacking}</option>
             <option value="ABUSIVE BEHAVIOR">${t.optAbusive}</option>
             <option value="IN-GAME SCAM">${t.optScam}</option>
@@ -494,6 +491,7 @@ function updateFormContent() {
         subtextElem.textContent = t.issueSubtext;
         labelIssueType.textContent = t.issueReasonLabel;
         selectIssueType.innerHTML = `
+            <option value="" disabled selected>${t.selectAnIssue}</option>
             <option value="BUG">${t.optBug}</option>
             <option value="WEBSITE ISSUE">${t.optWeb}</option>
             <option value="IN-GAME ISSUE">${t.optIngame}</option>
@@ -552,6 +550,7 @@ const translations = {
         issueTitle: "Submit Technical Issue Form",
         issueSubtext: "Please fill your tech issue",
         issueReasonLabel: "Which kinda Issue?",
+        selectAnIssue: "SELECT AN ISSUE",
         optBug: "BUG",
         optWeb: "WEBSITE ISSUE",
         optIngame: "IN-GAME ISSUE",
@@ -598,6 +597,7 @@ const translations = {
         issueTitle: "तकनीकी समस्या फॉर्म",
         issueSubtext: "कृपया अपनी तकनीकी समस्या भरें",
         issueReasonLabel: "किस प्रकार की समस्या है?",
+        selectAnIssue: "ISSUE SELECT KAREIN",
         optBug: "बग (BUG)",
         optWeb: "वेबसाइट समस्या",
         optIngame: "इन-गेम समस्या",
@@ -644,6 +644,7 @@ const translations = {
         issueTitle: "Technical Issue Form",
         issueSubtext: "Apni tech issue yahan bharein",
         issueReasonLabel: "Kis tarah ki issue hai?",
+        selectAnIssue: "SELECT AN ISSUE",
         optBug: "BUG",
         optWeb: "WEBSITE ISSUE",
         optIngame: "IN-GAME ISSUE",
@@ -690,6 +691,7 @@ const translations = {
         issueTitle: "Форма технической проблемы",
         issueSubtext: "Пожалуйста, опишите вашу техническую проблему",
         issueReasonLabel: "Какая это проблема?",
+        selectAnIssue: "ВЫБЕРИТЕ ПРОБЛЕМУ",
         optBug: "БАГ",
         optWeb: "ПРОБЛЕМА С САЙТОМ",
         optIngame: "ИГРОВАЯ ПРОБЛЕМА",
@@ -736,6 +738,7 @@ const translations = {
         issueTitle: "Formulario de problema técnico",
         issueSubtext: "Por favor complete su problema técnico",
         issueReasonLabel: "¿Qué tipo de problema es?",
+        selectAnIssue: "SELECCIONAR UN PROBLEMA",
         optBug: "ERROR (BUG)",
         optWeb: "PROBLEMA WEB",
         optIngame: "PROBLEMA EN EL JUEGO",
@@ -775,7 +778,7 @@ hinglish: {
  faq: {t:`FAQ`, h:`WIND'S Infrastructure ke baare me Frequently Asked Questions`, b:`<p><strong>WIND'S Development (EST. 2015)</strong> ki operations se jude technical sawaalon ke quick jawab neeche दिए गए हैं।</p><h4>Q1: WIND'S Development kya hai?</h4><p>2015 me establish hua WIND'S Development web apps, Discord bot systems (RAZE™, ZYRAX) aur mobile game projects banata hai.</p>`, d:`Koi sawaal yahan nahi hai? Hamari community se Discord par poochhein:`}
 },
 ru: {
- news: {t:`Новости и объявления`, h:`Официальное объявление: развитие инфраструктуры и экосистемы WIND'S Development (2015–2026)`, b:`<p>Добро пожаловать на официальный новостной портал <strong>WIND'S Development</strong>. Основанная в 2015 году, команда WIND''S разрабатывает высокопроизводительные цифровые решения, мобильные игры с открытым миром и системы автоматизации для сообществ Discord (такие как <strong>RAZE™</strong> и <strong>ZYRAX</strong>).</p><h4>Основные обновления систем и проектов:</h4><ul><li><strong>Оптимизация экосистемы:</strong> наши процессы разработки для мобильных платформ полностью оптимизированы для высокой скорости, стабильности и удобной работы.</li><li><strong>Обновление инфраструктуры:</strong> все облачные развёртывания, поддомены разработчиков и серверы хостинга ботов переведены на архитектуру высокой доступности: работа 24/7 и минимальные задержки.</li></ul>`, d:`Присоединяйтесь к нашему официальному сообществу в Discord, чтобы получать объявления в реальном времени:`},
+ news: {t:`Новости и объявления`, h:`Официальное объявление: развитие инфраструктуры и экосистемы WIND'S Development (2015–2026)`, b:`<p>Добро пожаловать на официальный новостной портал <strong>WIND'S Development</strong>. Основанная в 2015 году, команда WIND'S разрабатывает высокопроизводительные цифровые решения, мобильные игры с открытым миром и системы автоматизации для сообществ Discord (такие как <strong>RAZE™</strong> и <strong>ZYRAX</strong>).</p><h4>Основные обновления систем и проектов:</h4><ul><li><strong>Оптимизация экосистемы:</strong> наши процессы разработки для мобильных платформ полностью оптимизированы для высокой скорости, стабильности и удобной работы.</li><li><strong>Обновление инфраструктуры:</strong> все облачные развёртывания, поддомены разработчиков и серверы хостинга ботов переведены на архитектуру высокой доступности: работа 24/7 и минимальные задержки.</li></ul>`, d:`Присоединяйтесь к нашему официальному сообществу в Discord, чтобы получать объявления в реальном времени:`},
  guide: {t:`Руководство для новичков`, h:`Начало работы с проектами и платформами сообщества WIND'S Development`, b:`<p>Добро пожаловать в официальное руководство для новичков <strong>WIND'S Development (EST. 2015)</strong>. Используете ли вы наши мобильные веб-приложения и игры с открытым миром или специальных Discord-ботов, это руководство поможет вам легко начать.</p><h4>1. Знакомство с нашей экосистемой:</h4><p>WIND'S Development создаёт мультиплатформенные решения, которые быстро и адаптивно работают на телефонах, планшетах и компьютерах.</p>`, d:`Нужна помощь с началом работы или живая поддержка разработчиков? Заходите на наш Discord-сервер:`},
  account: {t:`Проблемы с аккаунтом`, h:`Безопасность аккаунта, синхронизация и восстановление`, b:`<p>Защита сервисов <strong>WIND'S Development</strong> и данных сообщества очень важна. В этом документе описаны лучшие практики защиты вашего цифрового профиля.</p><h4>Рекомендации по безопасности:</h4><ul><li><strong>Двухфакторная аутентификация (2FA):</strong> всегда включайте 2FA на привязанных аккаунтах Discord.</li><li><strong>Защита данных:</strong> сотрудники WIND'S Development <em>никогда</em> не попросят у вас пароли или токены.</li></ul>`, d:`Нужно срочное восстановление аккаунта или помощь сотрудников? Свяжитесь с нами:`},
  payments: {t:`Платежи и покупки`, h:`Транзакции в магазине, кредиты хостинга и поддержка по оплате`, b:`<p>Все финансовые операции, взносы на хостинг серверов и покупки в магазине экосистемы <strong>WIND'S Development (EST. 2015)</strong> проходят через проверенные зашифрованные платёжные шлюзы.</p><h4>Порядок оплаты и подтверждения транзакций:</h4><ul><li><strong>Время обработки:</strong> цифровые бонусы и кредиты хостинга начисляются сразу после подтверждения транзакции.</li><li><strong>Неудачные транзакции:</strong> если деньги списаны, а бонусы не начислены, сохраните чек и отправьте тикет.</li></ul>`, d:`Отправьте тикет по оплате или спросите о подписках на хостинг в Discord:`},
@@ -851,7 +854,6 @@ function changeLanguage(lang) {
         document.getElementById('txt-form-back').textContent = t.formBack;
     }
 
-    // Form element translation updates
     document.getElementById('lblYourName').textContent = t.lblName;
     document.getElementById('lblMail').textContent = t.lblMail;
     document.getElementById('txtGoogleBtn').textContent = t.googleBtn;
