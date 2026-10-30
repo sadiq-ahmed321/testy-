@@ -7,6 +7,8 @@
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 <!-- Official Google Identity Services Script -->
 <script src="https://accounts.google.com/gsi/client" async defer></script>
+<!-- Supabase JS Client -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
 
@@ -101,7 +103,7 @@ html, body {
 .category-dropdown { width: 100%; padding: 14px 18px; background: #282c3f; border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; color: #ffffff; font-size: 0.98rem; font-weight: 600; outline: none; cursor: pointer; transition: border-color 0.3s; }
 .category-dropdown:focus { border-color: var(--accent-yellow); }
 
-.section-header { margin-bottom: 25px; }
+.section-header { margin-bottom: 25px; display: flex; justify-content: space-between; align-items: center; }
 .section-header h2 { font-size: 1.6rem; font-weight: 900; color: #1a1a1a; border-left: 5px solid var(--accent-red); padding-left: 14px; }
 
 .articles-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; }
@@ -118,14 +120,14 @@ html, body {
 .category-body p { font-size: 0.9rem; color: #a0aec0; line-height: 1.5; margin-bottom: 20px; }
 .article-count { font-size: 0.85rem; font-weight: 700; color: #718096; text-transform: lowercase; border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 12px; }
 
-#detailView, #fullFormView { display: none; }
+#detailView, #fullFormView, #ticketsDashboardView { display: none; }
 
 .back-btn { display: inline-flex; align-items: center; gap: 8px; background: var(--card-bg); border: 1px solid var(--card-border); color: var(--text-dark); padding: 10px 20px; border-radius: 8px; font-weight: 700; cursor: pointer; margin-bottom: 25px; transition: 0.2s; }
 .back-btn:hover { background: #dcd3c1; }
 
-.article-content-box, .full-form-card { background: #ffffff; border: 1px solid var(--card-border); border-radius: 16px; padding: 35px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); color: var(--text-dark); }
-.full-form-card h2 { font-size: 1.6rem; font-weight: 800; margin-bottom: 8px; color: #1a1a1a; }
-.full-form-card p.form-subtext { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 25px; border-bottom: 1px solid var(--card-border); padding-bottom: 15px; }
+.article-content-box, .full-form-card, .dashboard-card { background: #ffffff; border: 1px solid var(--card-border); border-radius: 16px; padding: 35px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); color: var(--text-dark); }
+.full-form-card h2, .dashboard-card h2 { font-size: 1.6rem; font-weight: 800; margin-bottom: 8px; color: #1a1a1a; }
+.full-form-card p.form-subtext, .dashboard-card p.form-subtext { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 25px; border-bottom: 1px solid var(--card-border); padding-bottom: 15px; }
 
 .btn-google-login { display: inline-flex; align-items: center; justify-content: center; gap: 12px; background: #ffffff; color: #374151; border: 1px solid #cbd5e1; padding: 12px 18px; border-radius: 8px; font-size: 0.95rem; font-weight: 700; cursor: pointer; width: 100%; box-shadow: 0 2px 5px rgba(0,0,0,0.05); transition: 0.2s; }
 .btn-google-login:hover { background: #f1f5f9; border-color: #94a3b8; }
@@ -142,6 +144,13 @@ html, body {
 
 .btn-red { width: 100%; padding: 14px; border-radius: 8px; border: none; background: var(--accent-red); color: #ffffff; font-weight: 700; font-size: 1.05rem; cursor: pointer; transition: background 0.3s; box-shadow: 0 4px 10px rgba(230,57,70,0.25); display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
 .btn-red:hover { background: var(--accent-red-hover); }
+
+/* Live Tickets Styling */
+.ticket-list-item { background: #1e2235; color: #ffffff; padding: 18px 20px; border-radius: 12px; margin-bottom: 15px; border-left: 5px solid var(--accent-yellow); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+.ticket-header-meta { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 0.85rem; color: #a0aec0; }
+.ticket-user-name { font-weight: 800; font-size: 1.05rem; color: #ffffff; }
+.ticket-badge { background: var(--accent-red); color: #ffffff; padding: 4px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 800; letter-spacing: 0.5px; text-transform: uppercase; }
+.ticket-message-text { font-size: 0.95rem; line-height: 1.5; color: #e2e8f0; margin-bottom: 8px; white-space: pre-line; }
 
 .article-meta { font-size: 0.85rem; font-weight: 600; color: var(--text-muted); margin-bottom: 20px; padding-bottom: 15px; border-bottom: 1px solid var(--card-border); }
 .article-body-text { font-size: 0.98rem; line-height: 1.7; color: #333333; }
@@ -205,7 +214,8 @@ footer { margin-top: auto; text-align: center; padding: 25px; border-top: 1px so
                             <option value="">SELECT CATEGORY</option>
                             <option value="report">1. REPORT PLAYER</option>
                             <option value="issue">2. SUBMIT TECHNICAL ISSUE</option>
-                            <option value="live">3. LIVE SUPPORT</option>
+                            <option value="tickets">3. VIEW LIVE SUPPORT TICKETS</option>
+                            <option value="live">4. LIVE DISCORD SUPPORT</option>
                         </select>
                     </div>
                 </div>
@@ -325,6 +335,16 @@ footer { margin-top: auto; text-align: center; padding: 25px; border-top: 1px so
             </div>
         </div>
 
+        <!-- TICKETS DASHBOARD VIEW -->
+        <div id="ticketsDashboardView">
+            <button class="back-btn" onclick="goHome()"><i class="fa-solid fa-arrow-left"></i> <span>Back to Home</span></button>
+            <div class="dashboard-card">
+                <h2><i class="fa-solid fa-ticket" style="color:var(--accent-red)"></i> Live Support Tickets</h2>
+                <p class="form-subtext">Real-time submitted support issues & player reports</p>
+                <div id="ticketsContainer">Loading tickets...</div>
+            </div>
+        </div>
+
         <!-- DETAIL ARTICLE VIEW -->
         <div id="detailView">
             <button class="back-btn" onclick="goHome()"><i class="fa-solid fa-arrow-left"></i> <span id="txt-back">Back to Categories</span></button>
@@ -351,6 +371,11 @@ footer { margin-top: auto; text-align: center; padding: 25px; border-top: 1px so
 </div>
 
 <script>
+// Supabase Configuration
+const SUPABASE_URL = 'https://boqabjzjfzjudcmzhzac.supabase.co';
+const SUPABASE_PUB_KEY = 'sb_publishable_2tkZzCP-Tc3a8OQJzbuTWg_qGsX-7D0'; 
+const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_PUB_KEY);
+
 let currentLang = 'en';
 let activeCategoryKey = null;
 let currentFormType = 'issue';
@@ -452,6 +477,8 @@ function handleCategorySelection(val) {
     if (val === 'live') {
         window.open('https://dc.gg/winds.dev', '_blank');
         document.getElementById('supportCategorySelect').value = '';
+    } else if (val === 'tickets') {
+        openTicketsDashboard();
     } else {
         openFullForm(val);
     }
@@ -462,10 +489,55 @@ function openFullForm(type) {
     document.getElementById('heroSection').style.display = 'none';
     document.getElementById('homeView').style.display = 'none';
     document.getElementById('detailView').style.display = 'none';
+    document.getElementById('ticketsDashboardView').style.display = 'none';
     document.getElementById('fullFormView').style.display = 'block';
 
     updateFormContent();
     scrollToTop();
+}
+
+function openTicketsDashboard() {
+    document.getElementById('heroSection').style.display = 'none';
+    document.getElementById('homeView').style.display = 'none';
+    document.getElementById('detailView').style.display = 'none';
+    document.getElementById('fullFormView').style.display = 'none';
+    document.getElementById('ticketsDashboardView').style.display = 'block';
+
+    fetchLiveTickets();
+    scrollToTop();
+}
+
+async function fetchLiveTickets() {
+    const container = document.getElementById('ticketsContainer');
+    container.innerHTML = '<p style="text-align:center; color:#666;">Loading live tickets from database...</p>';
+
+    const { data: tickets, error } = await supabaseClient
+        .from('tickets')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+    if (error) {
+        container.innerHTML = `<p style="color:red; text-align:center;">Failed to load tickets: ${error.message}</p>`;
+        return;
+    }
+
+    if (!tickets || tickets.length === 0) {
+        container.innerHTML = '<p style="text-align:center; color:#666;">No support tickets found.</p>';
+        return;
+    }
+
+    container.innerHTML = tickets.map(t => `
+        <div class="ticket-list-item">
+            <div class="ticket-header-meta">
+                <span class="ticket-user-name"><i class="fa-solid fa-user"></i> ${t.name || 'Anonymous'}</span>
+                <span class="ticket-badge">${t.issue_type || 'GENERAL'}</span>
+            </div>
+            <div class="ticket-message-text">${t.message || 'No description provided.'}</div>
+            <div style="font-size:0.75rem; color:#718096; text-align:right;">
+                <i class="fa-solid fa-clock"></i> ${new Date(t.created_at).toLocaleString()}
+            </div>
+        </div>
+    `).join('');
 }
 
 function updateFormContent() {
@@ -501,7 +573,7 @@ function updateFormContent() {
     }
 }
 
-function handleFullFormSubmit(e) {
+async function handleFullFormSubmit(e) {
     e.preventDefault();
     if (!isGoogleAuthenticated) {
         const t = translations[currentLang] || translations.en;
@@ -509,9 +581,22 @@ function handleFullFormSubmit(e) {
         triggerRealGoogleAuth();
         return;
     }
-    const t = translations[currentLang] || translations.en;
-    alert(t.alertSuccess);
-    goHome();
+
+    const name = document.getElementById('inputNickname').value;
+    const issue_type = document.getElementById('selectIssueType').value;
+    const message = document.getElementById('txtAreaDesc').value;
+
+    const { data, error } = await supabaseClient
+        .from('tickets')
+        .insert([{ name, issue_type, message }]);
+
+    if (error) {
+        alert("Error submitting ticket to database: " + error.message);
+    } else {
+        const t = translations[currentLang] || translations.en;
+        alert(t.alertSuccess);
+        goHome();
+    }
 }
 
 const translations = {
@@ -788,7 +873,7 @@ ru: {
 es: {
  news: {t:`Noticias y anuncios`, h:`Anuncio oficial: expansión de la infraestructura y el ecosistema de WIND'S Development (2015–2026)`, b:`<p>Bienvenido al portal oficial de noticias de <strong>WIND'S Development</strong>. Fundado en 2015, WIND'S ha evolucionado como una iniciativa dedicada a crear soluciones digitales de alto rendimiento, juegos móviles de mundo abierto y sistemas avanzados de automatización para comunidades de Discord (como <strong>RAZE™</strong> y <strong>ZYRAX</strong>).</p><h4>Actualizaciones clave de sistemas y proyectos:</h4><ul><li><strong>Optimización del ecosistema:</strong> nuestros procesos de desarrollo en plataformas móviles se han optimizado a fondo para lograr mayor velocidad, estabilidad y una experiencia fluida.</li><li><strong>Mejoras de infraestructura:</strong> todos los despliegues en la nube, subdominios de desarrollador y servidores de alojamiento de bots pasaron a una arquitectura de alta disponibilidad, con funcionamiento 24/7 y latencia mínima.</li></ul>`, d:`Únete a nuestra comunidad oficial de Discord para recibir anuncios en tiempo real:`},
  guide: {t:`Guía para principiantes`, h:`Primeros pasos con los proyectos y plataformas de la comunidad de WIND'S Development`, b:`<p>Te damos la bienvenida a la guía oficial para principiantes de <strong>WIND'S Development (EST. 2015)</strong>. Ya uses nuestras aplicaciones web móviles, juegos de mundo abierto o nuestros bots de Discord, esta guía te explica todo lo necesario para empezar sin problemas.</p><h4>1. Conoce nuestro ecosistema:</h4><p>WIND'S Development crea soluciones multiplataforma con un rendimiento adaptable en móviles, tabletas y ordenadores.</p>`, d:`¿Necesitas ayuda para empezar o asistencia en vivo de los desarrolladores? Únete a nuestro servidor de Discord:`},
- account: {t:`Problemas de cuenta`, h:`Seguridad, sincronización y recuperación de cuentas`, b:`<p>Mantener seguros los servicios de <strong>WIND'S Development</strong> y las credenciales de la comunidad es fundamental. Este documento recoge las mejores prácticas para proteger tu perfil digital.</p><h4>Pautas y buenas prácticas de seguridad:</h4><ul><li><strong>Autenticación en dos pasos (2FA):</strong> activa siempre la 2FA en tus cuentas de Discord vinculadas.</li><li><strong>Protección de credenciales:</strong> el personal de WIND'S Development <em>nunca</em> te pedirá contraseñas ni tokens.</li></ul>`, d:`¿Necesitas recuperar tu cuenta con urgencia o hablar con el personal? Contáctanos en:`},
+ account: {t:`Problemas de cuenta`, h:`Seguridad, sincronización y recuperación de cuentas`, b:`<p>Mantener seguros los servicios de <strong>WIND'S Development</strong> y las credenciales de la comunidad es fundamental. Este documento recoge las mejores prácticas para proteger tu perfil digital.</p><h4>Pautas y buenas prácticas de seguridad:</h4><ul><li><strong>Two-Factor Authentication (2FA):</strong> activa siempre la 2FA en tus cuentas de Discord vinculadas.</li><li><strong>Protección de credenciales:</strong> el personal de WIND'S Development <em>nunca</em> te pedirá contraseñas ni tokens.</li></ul>`, d:`¿Necesitas recuperar tu cuenta con urgencia o hablar con el personal? Contáctanos en:`},
  payments: {t:`Pagos y compras`, h:`Transacciones de la tienda, créditos de alojamiento y soporte de facturación`, b:`<p>Todas las transacciones, aportaciones de alojamiento de servidores y compras en la tienda del ecosistema <strong>WIND'S Development (EST. 2015)</strong> se procesan mediante pasarelas verificadas y cifradas.</p><h4>Protocolos de facturación y verificación:</h4><ul><li><strong>Tiempos de procesamiento:</strong> las ventajas digitales y los créditos de alojamiento se acreditan al instante tras verificar la transacción.</li><li><strong>Transacciones fallidas:</strong> si se descontó el pago pero no recibiste las ventajas, conserva tu recibo y envía un ticket.</li></ul>`, d:`Envía un ticket de facturación o consulta sobre suscripciones de alojamiento en Discord:`},
  violations: {t:`Infracciones y sanciones`, h:`Código de conducta, medidas disciplinarias y apelaciones de baneos`, b:`<p>Para mantener un entorno respetuoso y seguro en las plataformas de <strong>WIND'S Development</strong>, se exige el cumplimiento estricto de nuestro Código de conducta.</p><h4>Normas de aplicación:</h4><ul><li><strong>Tolerancia cero:</strong> aprovechar errores, usar trampas de terceros o tener un comportamiento abusivo conlleva la inclusión permanente en la lista negra.</li></ul>`, d:`Envía una apelación de baneo o habla con la dirección:`},
  faq: {t:`Preguntas frecuentes`, h:`Preguntas frecuentes sobre la infraestructura de WIND'S`, b:`<p>Aquí encontrarás respuestas técnicas rápidas sobre el funcionamiento de <strong>WIND'S Development (EST. 2015)</strong>.</p><h4>P1: ¿Qué es WIND'S Development?</h4><p>Fundado en 2015, WIND'S Development crea aplicaciones web, sistemas de bots de Discord (RAZE™, ZYRAX) y proyectos de juegos móviles.</p>`, d:`¿Tienes una pregunta que no está aquí? Pregunta a nuestra comunidad en Discord:`}
@@ -796,11 +881,11 @@ es: {
 };
 
 const EXTRA = {
- en: {meta:`October 2026 | Published by WIND'S Development Core Team`, count:`1 article`, help:`Get Your Help!`, opts:[`1. REPORT PLAYER`,`2. SUBMIT TECHNICAL ISSUE`,`3. LIVE SUPPORT`]},
- hi: {meta:`अक्टूबर 2026 | WIND'S Development कोर टीम द्वारा प्रकाशित`, count:`1 लेख`, help:`मदद पाएं!`, opts:[`1. प्लेयर रिपोर्ट करें`,`2. तकनीकी समस्या जमा करें`,`3. लाइव सपोर्ट`]},
- hinglish: {meta:`October 2026 | WIND'S Development Core Team dwara published`, count:`1 article`, help:`Help Paayein!`, opts:[`1. Player Report Karein`,`2. Technical Issue Submit Karein`,`3. Live Support`]},
- ru: {meta:`Октябрь 2026 | Опубликовано командой WIND'S Development`, count:`1 статья`, help:`Получить помощь!`, opts:[`1. Пожаловаться на игрока`,`2. Сообщить о технической проблеме`,`3. Онлайн-поддержка`]},
- es: {meta:`Octubre 2026 | Publicado por el equipo de WIND'S Development`, count:`1 artículo`, help:`¡Obtén ayuda!`, opts:[`1. Reportar jugador`,`2. Enviar problema técnico`,`3. Soporte en vivo`]}
+ en: {meta:`October 2026 | Published by WIND'S Development Core Team`, count:`1 article`, help:`Get Your Help!`, opts:[`1. REPORT PLAYER`,`2. SUBMIT TECHNICAL ISSUE`,`3. VIEW LIVE SUPPORT TICKETS`,`4. LIVE DISCORD SUPPORT`]},
+ hi: {meta:`अक्टूबर 2026 | WIND'S Development कोर टीम द्वारा प्रकाशित`, count:`1 लेख`, help:`मदद पाएं!`, opts:[`1. प्लेयर रिपोर्ट करें`,`2. तकनीकी समस्या जमा करें`,`3. लाइव सपोर्ट टिकट देखें`,`4. लाइव डिस्कॉर्ड सपोर्ट`]},
+ hinglish: {meta:`October 2026 | WIND'S Development Core Team dwara published`, count:`1 article`, help:`Help Paayein!`, opts:[`1. Player Report Karein`,`2. Technical Issue Submit Karein`,`3. Live Support Tickets Dekhein`,`4. Live Discord Support`]},
+ ru: {meta:`Октябрь 2026 | Опубликовано командой WIND'S Development`, count:`1 статья`, help:`Получить помощь!`, opts:[`1. Пожаловаться на игрока`,`2. Сообщить о технической проблеме`,`3. Просмотреть онлайн-тикеты`,`4. Онлайн-поддержка Discord`]},
+ es: {meta:`Octubre 2026 | Publicado por el equipo de WIND'S Development`, count:`1 artículo`, help:`¡Obtén ayuda!`, opts:[`1. Reportar jugador`,`2. Enviar problema técnico`,`3. Ver tickets en vivo`,`4. Soporte en vivo Discord`]}
 };
 
 function renderArticleContent(key) {
@@ -820,7 +905,7 @@ function applyExtraTranslations() {
     document.querySelectorAll('.article-count').forEach(el => { el.textContent = x.count; });
     const sel = document.getElementById('supportCategorySelect');
     sel.options[0].text = t.selectCatLbl;
-    [1, 2, 3].forEach(i => { sel.options[i].text = x.opts[i - 1]; });
+    [1, 2, 3, 4].forEach(i => { if(sel.options[i]) sel.options[i].text = x.opts[i - 1]; });
 }
 
 function changeLanguage(lang) {
@@ -873,6 +958,7 @@ function openCategory(key) {
     document.getElementById('heroSection').style.display = 'none';
     document.getElementById('homeView').style.display = 'none';
     document.getElementById('fullFormView').style.display = 'none';
+    document.getElementById('ticketsDashboardView').style.display = 'none';
     document.getElementById('detailView').style.display = 'block';
     renderArticleContent(key);
     scrollToTop();
@@ -882,6 +968,7 @@ function goHome() {
     activeCategoryKey = null;
     document.getElementById('detailView').style.display = 'none';
     document.getElementById('fullFormView').style.display = 'none';
+    document.getElementById('ticketsDashboardView').style.display = 'none';
     document.getElementById('heroSection').style.display = 'block';
     document.getElementById('homeView').style.display = 'block';
     document.getElementById('searchBoxContainer').style.display = 'block';
@@ -899,4 +986,4 @@ document.getElementById('searchInput').addEventListener('input', function(e) {
 });
 </script>
 </body>
-</html>
+    </html>
