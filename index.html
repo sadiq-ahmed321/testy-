@@ -353,7 +353,7 @@ footer { margin-top: auto; text-align: center; padding: 25px; border-top: 1px so
 </div>
 
 <script>
-// Supabase Configuration
+// Supabase Setup
 const SUPABASE_URL = 'https://boqabjzjfzjudcmzhzac.supabase.co';
 const SUPABASE_PUB_KEY = 'sb_publishable_2tkZzCP-Tc3a8OQJzbuTWg_qGsX-7D0'; 
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_PUB_KEY);
@@ -457,7 +457,8 @@ function toggleSupportOptions() {
 function handleCategorySelection(val) {
     if (!val) return;
     if (val === 'live') {
-        window.open('https://dc.gg/winds.dev', '_blank');
+        // Direct User ka Mail App open hoga developmentwinds@gmail.com par
+        window.location.href = 'mailto:developmentwinds@gmail.com?subject=WiNDS%20Development%20Live%20Support%20Inquiry';
         document.getElementById('supportCategorySelect').value = '';
     } else {
         openFullForm(val);
@@ -518,7 +519,7 @@ async function handleFullFormSubmit(e) {
     }
 
     const name = document.getElementById('inputNickname').value;
-    const email = document.getElementById('loggedEmailText').textContent; // Captured Google Email
+    const email = document.getElementById('loggedEmailText').textContent; 
     const issue_type = document.getElementById('selectIssueType').value;
     const message = document.getElementById('txtAreaDesc').value;
 
@@ -811,7 +812,7 @@ es: {
  guide: {t:`Guía para principiantes`, h:`Primeros pasos con los proyectos y plataformas de la comunidad de WIND'S Development`, b:`<p>Te damos la bienvenida a la guía oficial para principiantes de <strong>WIND'S Development (EST. 2015)</strong>. Ya uses nuestras aplicaciones web móviles, juegos de mundo abierto o nuestros bots de Discord, esta guía te explica todo lo necesario para empezar sin problemas.</p><h4>1. Conoce nuestro ecosistema:</h4><p>WIND'S Development crea soluciones multiplataforma con un rendimiento adaptable en móviles, tabletas y ordenadores.</p>`, d:`¿Necesitas ayuda para empezar o asistencia en vivo de los desarrolladores? Únete a nuestro servidor de Discord:`},
  account: {t:`Problemas de cuenta`, h:`Seguridad, sincronización y recuperación de cuentas`, b:`<p>Mantener seguros los servicios de <strong>WIND'S Development</strong> y las credenciales de la comunidad es fundamental. Este documento recoge las mejores prácticas para proteger tu perfil digital.</p><h4>Security Guidelines & Best Practices:</h4><ul><li><strong>Two-Factor Authentication (2FA):</strong> activa siempre la 2FA en tus cuentas de Discord vinculadas.</li><li><strong>Protección de credenciales:</strong> el personal de WIND'S Development <em>nunca</em> te pedirá contraseñas ni tokens.</li></ul>`, d:`¿Necesitas recuperar tu cuenta con urgencia o hablar con el personal? Contáctanos en:`},
  payments: {t:`Pagos y compras`, h:`Transacciones de la tienda, créditos de alojamiento y soporte de facturación`, b:`<p>Todas las transacciones, aportaciones de alojamiento de servidores y compras en la tienda del ecosistema <strong>WIND'S Development (EST. 2015)</strong> se procesan mediante pasarelas verificadas y cifradas.</p><h4>Protocolos de facturación y verificación:</h4><ul><li><strong>Tiempos de procesamiento:</strong> las ventajas digitales y los créditos de alojamiento se acreditan al instante tras verificar la transacción.</li><li><strong>Transacciones fallidas:</strong> si se descontó el pago pero no recibiste las ventajas, conserva tu recibo y envía un ticket.</li></ul>`, d:`Envía un ticket de facturación o consulta sobre suscripciones de alojamiento en Discord:`},
- violations: {t:`Infracciones y sanciones`, h:`Código de conducta, medidas disciplinarias y apelaciones de baneos`, b:`<p>An environment respectful and secure on <strong>WIND'S Development</strong> platforms requires strict adherence to our Code of Conduct.</p><h4>Normas de aplicación:</h4><ul><li><strong>Tolerancia cero:</strong> aprovechar errores, usar trampas de terceros o tener un comportamiento abusivo conlleva la inclusión permanente en la lista negra.</li></ul>`, d:`Envía una apelación de baneo o habla con la dirección:`},
+ violations: {t:`Infracciones y sanciones`, h:`Código de conducta, medidas disciplinarias y apelaciones de baneos`, b:`<p>Para mantener un entorno respetuoso y seguro en las plataformas de <strong>WIND'S Development</strong>, se exige el cumplimiento estricto de nuestro Código de conducta.</p><h4>Normas de aplicación:</h4><ul><li><strong>Tolerancia cero:</strong> aprovechar errores, usar trampas de terceros o tener un comportamiento abusivo conlleva la inclusión permanente en la lista negra.</li></ul>`, d:`Envía una apelación de baneo o habla con la dirección:`},
  faq: {t:`Preguntas frecuentes`, h:`Preguntas frecuentes sobre la infraestructura de WIND'S`, b:`<p>Aquí encontrarás respuestas técnicas rápidas sobre el funcionamiento de <strong>WIND'S Development (EST. 2015)</strong>.</p><h4>P1: ¿Qué es WIND'S Development?</h4><p>Fundado en 2015, WIND'S Development crea aplicaciones web, sistemas de bots de Discord (RAZE™, ZYRAX) y proyectos de juegos móviles.</p>`, d:`¿Tienes una pregunta que no está aquí? Pregunta a nuestra comunidad en Discord:`}
 }
 };
@@ -906,7 +907,7 @@ function goHome() {
     document.getElementById('heroSection').style.display = 'block';
     document.getElementById('homeView').style.display = 'block';
     document.getElementById('searchBoxContainer').style.display = 'block';
-    document.getElementById('supportCategorySelect').value = 'main';
+    document.getElementById('supportCategorySelect').value = '';
     scrollToTop();
 }
 
